@@ -1,0 +1,13 @@
+library('data.table')
+secondElement <- function(x){x[2]}
+colnames <- c("subject","y",read.table("features.txt",stringsAsFactors=F)[,2])
+test <- cbind(read.table("test/subject_test.txt"),read.table("test/y_test.txt"),read.table("test/X_test.txt"))
+train <- cbind(read.table("train/subject_train.txt"),read.table("train/y_train.txt"),read.table("train/X_train.txt"))
+merged <- rbind.data.frame(train,test)
+names(merged) <- colnames
+feature_type <- sapply(strsplit(colnames,split="-"),secondElement)
+std_mean_elements <- merged[,c(1:2,which(feature_type == "mean()" |feature_type == "std()"))]
+activity <- read.table("activity_labels.txt",stringsAsFactors=T)
+names(activity)<-c("ActivityValue","ActivityLabel")
+aggregated_data <- aggregate.data.frame(std_mean_elements,by=list(std_mean_elements$subject,std_mean_elements$y),FUN=mean)
+cleanData <- merge(activity,aggregated_data,by.x="ActivityValue",by.y="y")[,c(-1,-3,-4)]
