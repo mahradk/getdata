@@ -30,7 +30,7 @@ a variable of type data.frame that consists of X(sensor inputs), y(activity code
 
 ##merged
 a variable of type data.frame that consists of all the data from "test" data.frame appended to "train" data.frame.<br/><br/>
-###steps:<br/>
+###calculation:<br/>
 ```merged <- rbind.data.frame(train,test);
 names(merged) <- colnames```<br/><br/>
 ###steps:<br/>
@@ -47,4 +47,21 @@ The assumption is that the function, used on the data(e.g. mean()) is seperated 
 * split each element on the colnames using the seperator "-": ```strsplit(colnames,split="-")```<br/>
 * apply the created functin to the list that we just created and assign the resulting vector to "feature_type": ```feature_type <- sapply(SplitedNames,ExtractionFunction)```
  
+##std_mean_elements
+a variable of type data.frame that consists of all the data from which have -mean() or -std() in their column name.<br/><br/>
+###calculation:<br/>
+```std_mean_elements <- merged[,c(1:2,which(feature_type == "mean()" |feature_type == "std()"))]```<br/><br/>
+###steps:<br/>
+* create a vector of boolean that has a true elements for each column name that contains mean() or std(): ```feature_type == "mean()" |feature_type == "std()"```<br/>
+* create a numeric vector that contains the index for each true element: ```which(std_mean_features)```<br/>
+* extract the subject, activity and selected columns from "merged" dataset into "std_mean_elements": ```std_mean_elements <- merged[,c(1:2,selected_elements)]```
+
+##activity
+a variable of type data.frame that consists of activity labels and their corresponding values.<br/><br/>
+###calculation:<br/>
+```activity <- read.table("activity_labels.txt",stringsAsFactors=T);
+names(activity)<-c("ActivityValue","ActivityLabel")```<br/><br/>
+###steps:<br/>
+* read "activity_labels.txt" into "activity" dataset: ```activity <- read.table("activity_labels.txt",stringsAsFactors=T)```<br/>
+* set appropriate names for the dataset: ```names(activity)<-c("ActivityValue","ActivityLabel")```
 
