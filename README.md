@@ -65,3 +65,18 @@ names(activity)<-c("ActivityValue","ActivityLabel")```<br/><br/>
 * read "activity_labels.txt" into "activity" dataset: ```activity <- read.table("activity_labels.txt",stringsAsFactors=T)```<br/>
 * set appropriate names for the dataset: ```names(activity)<-c("ActivityValue","ActivityLabel")```
 
+##aggregated_data
+a mean aggregation of std_mean_elements by subject and activity over all columns.<br/><br/>
+###calculation:<br/>
+```aggregated_data <- aggregate.data.frame(std_mean_elements,by=list(std_mean_elements$subject,std_mean_elements$y),FUN=mean)```
+
+##cleanData
+a data.frame that has activities of type factor instead of integer which is then written to a file.<br/><br/>
+###calculation:<br/>
+```cleanData <- merge(activity,aggregated_data,by.x="ActivityValue",by.y="y")[,c(-1,-3,-4)];
+write.table(cleanData,file="cleanData.txt")```<br/><br/>
+###steps:<br/>
+* join aggregated_data with activity on activity value: ```merge(activity,aggregated_data,by.x="ActivityValue",by.y="y")```<br/>
+* remove the activity value column and the ones created by aggeregation and assign it to "cleanData" dataset: ```cleanData <- merged_aggregated_data[,c(-1,-3,-4)]```<br/>
+* write cleanData to the output: ```write.table(cleanData,file="cleanData.txt")```
+* 
